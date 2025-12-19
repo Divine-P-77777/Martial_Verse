@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
-const SUPER_ADMIN_EMAIL = 'dynamicphillic77777@gmail.com';
+const SUPER_ADMIN_EMAIL = process.env.VITE_SUPER_ADMIN_EMAIL ;
 
 const AdminRequestTable = () => {
   const { getToken, isSignedIn } = useAuth();

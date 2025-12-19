@@ -1,0 +1,23 @@
+
+React components for efficiently rendering large lists and tabular data. Check out the demo for some examples.
+https://www.npmjs.com/package/react-virtualized
+
+
+Lazyload your Components, Images or anything matters the performance.
+https://www.npmjs.com/package/react-lazyload
+
+
+THROTTLING: FUNCTION IS REPEATEDLY INVOKED AFTER A GIVEN INTERVAL
+DEBOUNCE: FUNCTION IS INVOKED AFTER A CERTAIN PERIOD OF INACTIVITY
+
+
+Code Splitting using Suspense, lazy  :  Instead of bundling all components into a single large JS file, you tell Vite/React to load parts of your app only when needed.
+
+
+Web Workers are great for:
+Large array processing (sorting, filtering, mapping)
+Image/video processing (Canvas, WebGL pre-render)
+Parsing large JSON or CSV files
+Cryptographic operations
+
+In React 18+, the useTransition hook helps you prioritize updates so that urgent updates (like typing) stay responsive while expensive or slow updates (like filtering a huge list) can be deferred in the background.

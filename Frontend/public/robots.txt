@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block sensitive or admin routes
+Disallow: /admin/
+Disallow: /login/
+Disallow: /register/
+
+# Specify the location of your sitemap
+Sitemap: https://martialverse.vercel.app/sitemap.xml

@@ -6,9 +6,10 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store, persistor } from './store';
 import { PersistGate } from 'redux-persist/integration/react';
-import ErrorBoundary from './components/common/ErrorBoundary';
 import { ClerkProvider } from "@clerk/clerk-react";
-import { ParallaxProvider } from 'react-scroll-parallax'; 
+import { ParallaxProvider } from 'react-scroll-parallax';
+import { HelmetProvider } from "@vuer-ai/react-helmet-async";
+
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
@@ -26,18 +27,20 @@ if (savedTheme === 'dark') {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ErrorBoundary>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <BrowserRouter>
             <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
-              <ParallaxProvider> 
-                <App />
-              </ParallaxProvider>
+              <HelmetProvider>
+                <ParallaxProvider>
+
+                  <App />
+
+                </ParallaxProvider>
+              </HelmetProvider>
             </ClerkProvider>
           </BrowserRouter>
         </PersistGate>
       </Provider>
-    </ErrorBoundary>
   </StrictMode>
 );

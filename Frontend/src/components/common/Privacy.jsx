@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import SEO from './SEO';
 
 const Privacy = () => {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
@@ -36,27 +37,37 @@ const Privacy = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-30 px-4 md:px-12 py-10" style={{ background: bg, color: text }}>
-      <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
+    <>
+      <SEO
+        title="Privacy Policy - Martial Verse"
+        description="Learn about our privacy practices and how we protect your data."
+        keywords="privacy, data protection, user rights"
+        image="/logo.png"
+        url={`${window.location.origin}/privacy`}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {sections.map((section, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
-            className="rounded-xl overflow-hidden shadow-lg border border-gray-300 hover:shadow-xl transition-all duration-300"
-            style={{ background: cardBg }}
-          >
-            <div className="p-6">
-              <h2 className="text-xl font-semibold mb-2 text-yellow-400">{section.title}</h2>
-              <p className="text-sm text-gray-400">{section.content}</p>
-            </div>
-          </motion.div>
-        ))}
+      <div className="min-h-screen pt-30 px-4 md:px-12 py-10" style={{ background: bg, color: text }}>
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {sections.map((section, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
+              className="rounded-xl overflow-hidden shadow-lg border border-gray-300 hover:shadow-xl transition-all duration-300"
+              style={{ background: cardBg }}
+            >
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-2 text-yellow-400">{section.title}</h2>
+                <p className="text-sm text-gray-400">{section.content}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

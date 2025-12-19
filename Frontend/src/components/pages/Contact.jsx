@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 import martialBg from '@assets/martial-loop.mp4';
+import SEO from '../common/SEO';
 
 const ContactSection = () => {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
@@ -11,7 +12,16 @@ const ContactSection = () => {
   const iconColor = isDarkMode ? 'text-white hover:text-yellow-400' : 'text-black hover:text-yellow-500';
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden font-[Inter]">
+    <>
+      <SEO
+        title="Contact Us - Martial Verse"
+        description="Get in touch with the Martial Verse team."
+        keywords="contact, martial arts"
+        image="/logo.png"
+        url={`${window.location.origin}/contact`}
+      />
+
+    <section className="relative w-full min-h-screen overflow-hidden font-[Inter] py-10">
   
       <div className="absolute inset-0 z-0">
         <video
@@ -92,6 +102,7 @@ const ContactSection = () => {
         </motion.form>
       </div>
     </section>
+        </>
   );
 };
 

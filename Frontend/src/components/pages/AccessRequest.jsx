@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
-
+import SEO from '../common/SEO';
 const AccessRequest = () => {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const bg = isDarkMode ? '#121212' : '#f7f7f7';
@@ -56,11 +56,19 @@ const AccessRequest = () => {
   };
 
   return (
-    <div className="min-h-screen py-16 px-6 md:px-16" style={{ background: bg, color: textColor }}>
-      <div className="max-w-3xl mx-auto bg-opacity-90 p-8 rounded-2xl shadow-xl" style={{ background: cardBg }}>
-        <h1 className="text-2xl md:text-3xl font-bold mb-6 text-red-600 uppercase tracking-widest text-center">
-          📩 Request Admin Access
-        </h1>
+    <>
+      <SEO
+        title="Request Admin Access - Martial Verse"
+        description="Request admin access to the Martial Verse platform."
+        keywords="admin access, request"
+        image="/logo.png"
+        url={`${window.location.origin}/access-request`}
+      />
+      <div className="min-h-screen py-16 px-6 md:px-16" style={{ background: bg, color: textColor }}>
+        <div className="max-w-3xl mx-auto bg-opacity-90 p-8 rounded-2xl shadow-xl" style={{ background: cardBg }}>
+          <h1 className="text-2xl md:text-3xl font-bold mb-6 text-red-600 uppercase tracking-widest text-center">
+            Request Admin Access
+          </h1>
 
         {success ? (
           <motion.div
@@ -121,6 +129,7 @@ const AccessRequest = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

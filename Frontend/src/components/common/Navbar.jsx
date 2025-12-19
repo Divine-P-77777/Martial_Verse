@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   UserButton,
@@ -16,6 +16,39 @@ const BladeNavbar = () => {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const dispatch = useDispatch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  //PWA
+ const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault(); // Prevent auto popup
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      console.log("User accepted PWA install");
+    }
+    setDeferredPrompt(null);
+  };
 
   const handleHomeClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -66,30 +99,31 @@ const BladeNavbar = () => {
         </button>
 
         <div className="hidden md:flex items-center h-12">
-          {navLinks.map((link) => {
-            const isActive = getActiveLink() === link.name;
-            const commonProps = {
-              key: link.name,
-              className:
-                getBladeTabClass(isActive) +
-                " h-full px-5 flex items-center justify-center relative rounded-md transition-colors duration-300 mx-[1px]",
-              "aria-current": isActive ? "page" : undefined,
-            };
+   {navLinks.map((link) => {
+  const isActive = getActiveLink() === link.name;
 
-            return link.name === "Home" ? (
-              <button onClick={handleHomeClick} {...commonProps}>
-                <span className="blade-label font-medium text-sm uppercase tracking-wider">
-                  {link.name}
-                </span>
-              </button>
-            ) : (
-              <Link to={link.path} {...commonProps}>
-                <span className="blade-label font-medium text-sm uppercase tracking-wider">
-                  {link.name}
-                </span>
-              </Link>
-            );
-          })}
+  const linkProps = {
+    className:
+      getBladeTabClass(isActive) +
+      " h-full px-5 flex items-center justify-center relative rounded-md transition-colors duration-300 mx-[1px]",
+    "aria-current": isActive ? "page" : undefined,
+  };
+
+  return link.name === "Home" ? (
+    <button key={link.name} onClick={handleHomeClick} {...linkProps}>
+      <span className="blade-label font-medium text-sm uppercase tracking-wider">
+        {link.name}
+      </span>
+    </button>
+  ) : (
+    <Link key={link.name} to={link.path} {...linkProps}>
+      <span className="blade-label font-medium text-sm uppercase tracking-wider">
+        {link.name}
+      </span>
+    </Link>
+  );
+})}
+
         </div>
 
         <div className="flex items-center gap-4">
@@ -140,53 +174,65 @@ const BladeNavbar = () => {
         </div>
       </nav>
 
-      {mobileMenuOpen && (
-        <div
-          className={`md:hidden fixed top-24 left-0 right-0 z-50 p-4 transition-colors ${isDarkMode ? "bg-[#1F1F1F] text-[#E0E0E0]" : "bg-white text-gray-700"}`}
+   {mobileMenuOpen && (
+  <div
+    className={`md:hidden backdrop-blur-md fixed top-24 left-0 right-0 z-50 p-4 transition-colors ${
+      isDarkMode
+        ? "bg-[#1F1F1F]/40 text-[#E0E0E0]"
+        : "bg-white/50 text-gray-700"
+    }`}
+  >
+    <div className="flex flex-col gap-3">
+      {navLinks.map((link) => {
+        const isActive = getActiveLink() === link.name;
+        return (
+          <Link
+            key={link.name} // ✅ key applied directly, no props spread
+            to={link.path}
+            className={
+              getMobileBladeTabClass(isActive) +
+              " py-3 px-4 rounded-md transition-colors"
+            }
+            aria-current={isActive ? "page" : undefined}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <span className="blade-label font-medium text-sm uppercase tracking-wider">
+              {link.name}
+            </span>
+          </Link>
+        );
+      })}
+
+      <SignedIn>
+        <Link
+          key="admin-link" 
+          to="/admin"
+          onClick={() => setMobileMenuOpen(false)}
+          className={
+            getMobileBladeTabClass(false) + " py-3 px-4 rounded-md mt-2"
+          }
         >
-          <div className="flex flex-col gap-3">
-            {navLinks.map((link) => {
-              const isActive = getActiveLink() === link.name;
-              return (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={
-                    getMobileBladeTabClass(isActive) +
-                    " py-3 px-4 rounded-md transition-colors"
-                  }
-                  aria-current={isActive ? "page" : undefined}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="blade-label font-medium text-sm uppercase tracking-wider">
-                    {link.name}
-                  </span>
-                </Link>
-              );
-            })}
+          <span className="blade-label">Admin Panel</span>
+        </Link>
+      </SignedIn>
 
-            <SignedIn>
-              <Link
-                to="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className={
-                  getMobileBladeTabClass(false) + " py-3 px-4 rounded-md mt-2"
-                }
-              >
-                <span className="blade-label">Admin Panel</span>
-              </Link>
-            </SignedIn>
-
-            <button
-              onClick={() => dispatch(toggleTheme())}
-              className={`w-full flex justify-between items-center py-3 px-4 rounded-md mt-2 ${isDarkMode ? "bg-[#2A2A2A] hover:bg-[#3A3A3A]" : "bg-gray-100 hover:bg-gray-200"}`}
-            >
-              <span>Theme</span>
-              {isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
-            </button>
-          </div>
-        </div>
+      {/* Install App Button — only shows if available */}
+      {!isInstalled && deferredPrompt && (
+        <button
+          onClick={handleInstallClick}
+          className={`w-full flex justify-center items-center py-3 px-4 rounded-md mt-2 font-semibold text-white transition-colors ${
+            isDarkMode
+              ? "bg-green-700 hover:bg-green-800"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          Install App
+        </button>
       )}
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

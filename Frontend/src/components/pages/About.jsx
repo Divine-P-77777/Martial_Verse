@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-
+import SEO from '../common/SEO';
 const About = () => {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const bg = isDarkMode ? '#0e0e0e' : '#f7f7f7';
@@ -7,6 +7,15 @@ const About = () => {
   const linkColor = isDarkMode ? '#facc15' : '#c53030';
 
   return (
+    <>
+      <SEO
+        title="About - Martial Verse"
+        description="Learn more about the creator of Martial Verse."
+        keywords="about, creator, martial arts"
+        image="/logo.png"
+        url={`${window.location.origin}/about`}
+      />
+    
     <div
       className="min-h-screen w-full py-20 px-6 md:px-16 font-sans"
       style={{ background: bg, color: text }}
@@ -43,6 +52,7 @@ const About = () => {
         </a>
       </div>
     </div>
+    </>
   );
 };
 

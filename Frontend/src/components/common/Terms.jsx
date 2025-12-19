@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-
+import SEO from './SEO';
 const Terms = () => {
   const isDarkMode = useSelector((state) => state.theme.isDarkMode);
   const bg = isDarkMode ? '#0d0d0d' : '#f5f5f5';
@@ -41,7 +41,15 @@ const Terms = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-30 px-4 md:px-12 py-10" style={{ background: bg, color: text }}>
+    <>      <SEO
+        title="Terms & Conditions - Martial Verse"
+        description="Learn about our terms and conditions for using the Martial Verse platform."
+        keywords="terms, conditions, user agreement"
+        image="/logo.png"
+        url={`${window.location.origin}/terms`}
+      />
+
+        <div className="min-h-screen pt-30 px-4 md:px-12 py-10" style={{ background: bg, color: text }}>
       <h1 className="text-3xl md:text-4xl font-bold mb-8 text-center">Terms & Conditions</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -62,6 +70,8 @@ const Terms = () => {
         ))}
       </div>
     </div>
+    </>
+
   );
 };
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Search, Loader } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import SEO from '../common/SEO';
 const YOUTUBE_THUMB = (id) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 const YOUTUBE_EMBED = (id) => `https://www.youtube.com/embed/${id}`;
 
@@ -45,7 +45,15 @@ export default function PlaylistSection() {
   }, [search]);
 
   return (
-    <div className="w-full py-14 pt-30 px-6 md:px-12" style={{ background: bg, color: text }}>
+    <>
+      <SEO
+        title="Martial Playlist - Martial Verse"
+        description="Explore our curated playlists of martial arts videos."
+        keywords="martial arts, playlists, video"
+        image="/logo.png"
+        url={`${window.location.origin}/playlists`}
+      />
+      <div className="w-full py-14 pt-30 px-6 md:px-12" style={{ background: bg, color: text }}>
         <h1 className='mx-auto flex justify-center items-center text-xl mb-4 sm:text-4xl  '>Martial Playlist</h1>
       <div className="max-w-6xl mx-auto">
         
@@ -61,7 +69,7 @@ export default function PlaylistSection() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-40">
+          <div className="flex justify-center items-center h-40 min-h-screen">
             <Loader className="animate-spin text-yellow-400 w-6 h-6" />
           </div>
         ) : (
@@ -124,5 +132,6 @@ export default function PlaylistSection() {
         )}
       </AnimatePresence>
     </div>
+  </>
   );
 }

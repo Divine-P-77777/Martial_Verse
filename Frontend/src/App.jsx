@@ -1,79 +1,80 @@
 import './App.css';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import  { Suspense, lazy } from 'react';
 
-import Home from "./components/pages/Home";
-
-import NotFound from "./components/pages/NotFound";
-import BlogDetail from "./components/pages/BlogDetail";
-import BlogListing from "./components/pages/BlogListing";
-
+// Common components that should always load immediately
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
-import Login from "./components/common/Login";
-import About from './components/pages/About';
-import Contact from './components/pages/sections/Contact';
-
-import AccessRequest from "./components/pages/AccessRequest";
-import AdminDashBoard from './components/admin/AdminDashBoard';
-import AdminRequestTable from "./components/admin/AdminRequestTable"
 import AdminProtectedRoute from './components/common/AdminProtectedRoute';
-import BlogUpload from "./components/admin/Blog/blogUpload";
-
-import Terms from "./components/common/Terms";
-import Privacy from "./components/common/Privacy";
-
-
 import useLenis from './hooks/useLenis';
+import { newtonsCradle } from 'ldrs'
+newtonsCradle.register()
 
-import PlayList from './components/pages/PlaylistCarousel';
+// Lazy-loaded pages (code splitting happens here)
+const Home = lazy(() => import("./components/pages/Home"));
+const NotFound = lazy(() => import("./components/pages/NotFound"));
+const BlogDetail = lazy(() => import("./components/pages/BlogDetail"));
+const BlogListing = lazy(() => import("./components/pages/BlogListing"));
+const Login = lazy(() => import("./components/common/Login"));
+const About = lazy(() => import('./components/pages/About'));
+const Contact = lazy(() => import('./components/pages/Contact'));
+const AccessRequest = lazy(() => import("./components/pages/AccessRequest"));
 
+const AdminDashBoard = lazy(() => import('./components/admin/AdminDashBoard'));
+const AdminRequestTable = lazy(() => import("./components/admin/AdminRequestTable"));
+const BlogUpload = lazy(() => import("./components/admin/Blog/blogUpload"));
+const PlaylistUploader = lazy(() => import("./components/admin/PlaylistUploader"));
 
-
-
+const Terms = lazy(() => import("./components/common/Terms"));
+const Privacy = lazy(() => import("./components/common/Privacy"));
+const PlayList = lazy(() => import('./components/pages/PlaylistCarousel'));
 
 function App() {
-
-
   const location = useLocation();
   useLenis();
 
-
-
   return (
     <>
-
       <Navbar showScrollLinks={location.pathname === "/"} />
 
-      <Routes>
+    
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-black">
+      <l-newtons-cradle
+        size="120"
+        speed="1.4"
+        color="#f87171" 
+      ></l-newtons-cradle>
+    </div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
+          <Route path="/blog" element={<BlogListing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/playlists" element={<PlayList />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/accessrequest" element={<AccessRequest />} />
 
-        <Route path="/" element={<Home />} />
+          {/* Admin routes */}
+          <Route path="/admin/upload" element={
+            <AdminProtectedRoute><BlogUpload /></AdminProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <AdminProtectedRoute><AdminDashBoard /></AdminProtectedRoute>
+          } />
+          <Route path="/admin/access" element={
+            <AdminProtectedRoute><AdminRequestTable /></AdminProtectedRoute>
+          } />
+          <Route path="/admin/playlist" element={
+            <AdminProtectedRoute><PlaylistUploader /></AdminProtectedRoute>
+          } />
 
-        <Route path="/blogs/:id" element={<BlogDetail />} />
-        <Route path="/blog" element={<BlogListing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/playlists" element={<PlayList />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
 
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
-
-        <Route path="/accessrequest" element={<AccessRequest />} />
-
-
-        <Route path="/admin/upload" element={
-          <AdminProtectedRoute><BlogUpload /></AdminProtectedRoute>
-        } />
-        <Route path="/admin" element={
-          <AdminProtectedRoute><AdminDashBoard /></AdminProtectedRoute>
-        } />
-        <Route path="/admin/access" element={
-          <AdminProtectedRoute><AdminRequestTable /></AdminProtectedRoute>
-        } />
-
-
-        <Route path="*" element={<NotFound />} />
-      </Routes>
       <Footer />
     </>
   );
